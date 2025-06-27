@@ -1,5 +1,6 @@
 package reynolds32896;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -19,15 +20,13 @@ public class Main {
             System.out.println("7. Factorial");
             System.out.println("8. Recursive Binary Count (BinRcc)");
             System.out.println("9. Exit");
-            System.out.print("Your choice: ");
 
-            int choice = input.nextInt();
+            int choice = getPositiveIntInput(input, "Your choice: ");
 
             switch (choice) {
                 case 1 -> {
                     int[] A = inputArray(input);
-                    System.out.print("Enter the key to search for: ");
-                    int key = input.nextInt();
+                    int key = getIntInput(input, "Enter the key to search for: ");
                     int index = algorithms.SequentialSearch(A, key);
                     System.out.println("Result index: " + index);
                 }
@@ -42,8 +41,7 @@ public class Main {
                     System.out.println("All elements unique? " + isUnique);
                 }
                 case 4 -> {
-                    System.out.print("Enter matrix size (n x n): ");
-                    int n = input.nextInt();
+                    int n = getPositiveIntInput(input, "Enter matrix size (n x n): ");
                     System.out.println("Enter Matrix A:");
                     int[][] A = inputMatrix(input, n);
                     System.out.println("Enter Matrix B:");
@@ -53,8 +51,7 @@ public class Main {
                     printMatrix(C);
                 }
                 case 5 -> {
-                    System.out.print("Enter matrix size (n x n): ");
-                    int n = input.nextInt();
+                    int n = getPositiveIntInput(input, "Enter matrix size (n x n): ");
                     System.out.println("Enter Matrix A:");
                     int[][] A = inputMatrix(input, n);
                     int[][] result = algorithms.GaussianElimination(A);
@@ -62,40 +59,39 @@ public class Main {
                     printMatrix(result);
                 }
                 case 6 -> {
-                    System.out.print("Enter a number: ");
-                    int n = input.nextInt();
+                    int n = getPositiveIntInput(input, "Enter a number: ");
                     int bits = algorithms.Binary(n);
                     System.out.println("Binary length: " + bits);
                 }
                 case 7 -> {
-                    System.out.print("Enter a number: ");
-                    int n = input.nextInt();
+                    int n = getPositiveIntInput(input, "Enter a number: ");
                     int fact = algorithms.Factorial(n);
                     System.out.println("Factorial: " + fact);
                 }
                 case 8 -> {
-                    System.out.print("Enter a number: ");
-                    int n = input.nextInt();
+                    int n = getPositiveIntInput(input, "Enter a number: ");
                     int binCount = algorithms.BinRcc(n);
                     System.out.println("Recursive binary count: " + binCount);
                 }
                 case 9 -> {
                     System.out.println("Exiting. Goodbye!");
-                    input.close();
-                    return;
+                    break;
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
+
+            if (choice == 9) break;
         }
+
+        input.close();
     }
 
     private static int[] inputArray(Scanner input) {
-        System.out.print("Enter number of elements: ");
-        int n = input.nextInt();
+        int n = getPositiveIntInput(input, "Enter number of elements: ");
         int[] A = new int[n];
         System.out.println("Enter elements:");
         for (int i = 0; i < n; i++) {
-            A[i] = input.nextInt();
+            A[i] = getIntInput(input, "Element " + (i + 1) + ": ");
         }
         return A;
     }
@@ -103,9 +99,9 @@ public class Main {
     private static int[][] inputMatrix(Scanner input, int n) {
         int[][] matrix = new int[n][n];
         for (int i = 0; i < n; i++) {
-            System.out.println("Enter row " + (i + 1) + " (space-separated):");
+            System.out.println("Enter row " + (i + 1) + ":");
             for (int j = 0; j < n; j++) {
-                matrix[i][j] = input.nextInt();
+                matrix[i][j] = getIntInput(input, "Value at (" + (i + 1) + "," + (j + 1) + "): ");
             }
         }
         return matrix;
@@ -114,9 +110,32 @@ public class Main {
     private static void printMatrix(int[][] matrix) {
         for (int[] row : matrix) {
             for (int val : row) {
-                System.out.print(val + "\t");
+                System.out.print(val);
             }
             System.out.println();
+        }
+    }
+
+    private static int getIntInput(Scanner input, String prompt) {
+        int value;
+        while (true) {
+            System.out.print(prompt);
+            try {
+                value = input.nextInt();
+                return value;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter an integer.");
+                input.next(); // clear invalid input
+            }
+        }
+    }
+
+    private static int getPositiveIntInput(Scanner input, String prompt) {
+        int value;
+        while (true) {
+            value = getIntInput(input, prompt);
+            if (value >= 0) return value;
+            else System.out.println("Please enter a non-negative number.");
         }
     }
 }

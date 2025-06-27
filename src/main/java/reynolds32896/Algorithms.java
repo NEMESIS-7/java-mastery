@@ -52,9 +52,9 @@ public class Algorithms {
     }
 
     public int[][] GaussianElimination(int[][] A){
-        for (int i = 0; i < A.length - 2; i++){
-            for (int j = i + 1; j < A.length - 1; j++){
-                for (int k = 0; k < A.length; k++){
+        for (int i = 0; i < A.length - 1; i++){
+            for (int j = i + 1; j < A.length; j++){
+                for (int k = 0; k < A[0].length; k++){
                     A[j][k] = A[j][k] - A[i][k] * A[j][i] / A[i][i];
                 }
             }
